@@ -3,7 +3,19 @@ import { Badge } from "@/components/ui/badge"
 import { ArrowDown, ArrowUp } from "lucide-react"
 import { batchPerformanceData } from "./batch-wall-time" // adjust path accordingly
 
-export const BatchLUWTable = () => {
+type BatchLuw = {
+  Application: string
+  PRDTotal: number
+  STGTotal: number
+  Difference: number
+}
+
+type Props = {
+  data: BatchLuw[];
+};
+
+
+export const BatchLUWTable = ({ data = [] }: Props) => {
   return (
     <Card className="w-full max-w-full">
       <CardHeader>
@@ -21,13 +33,13 @@ export const BatchLUWTable = () => {
             </tr>
           </thead>
           <tbody>
-            {batchPerformanceData.map((item, idx) => {
-              const isHigherInProd = item.diffCount > 0
+            {data.map((item, idx) => {
+              const isHigherInProd = item.Difference > 0
               return (
                 <tr key={idx} className="border-t border-gray-100 text-sm">
-                  <td className="px-4 py-2 whitespace-nowrap">{item.application}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">{item.prdTotalLUW.toLocaleString()}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">{item.stgTotalLUW.toLocaleString()}</td>
+                  <td className="px-4 py-2 whitespace-nowrap">{item.Application}</td>
+                  <td className="px-4 py-2 whitespace-nowrap">{item.PRDTotal.toLocaleString()}</td>
+                  <td className="px-4 py-2 whitespace-nowrap">{item.STGTotal.toLocaleString()}</td>
                   <td className="px-4 py-2 whitespace-nowrap">
                     <Badge className={isHigherInProd ? "bg-green-500 text-white" : "bg-red-500 text-white"}>
                       {isHigherInProd ? (
@@ -35,7 +47,7 @@ export const BatchLUWTable = () => {
                       ) : (
                         <ArrowDown className="h-3 w-3 mr-1 inline" />
                       )}
-                      {item.diffCount.toLocaleString()}
+                      {item.Difference.toLocaleString()}
                     </Badge>
                   </td>
                   <td className="px-4 py-2 whitespace-nowrap">

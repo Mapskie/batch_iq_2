@@ -25,8 +25,19 @@ export const batchPerformanceData = [
   { procDate: "8/1/2025", application: "CBN.Batch.Worker.PayAgmtRvw", prdWalltime: 436245, stgWalltime: 38057, diffMinutes: 398188, prdTotalLUW: 242183, stgTotalLUW: 166297, diffCount: 75886, prdAttempted: 0.8223, stgAttempted: 1.1255, diffLUWPerSec: -0.30 },
   { procDate: "8/1/2025", application: "CBN.Batch.Worker.PaymentPosting", prdWalltime: 384026, stgWalltime: 413837, diffMinutes: -29811, prdTotalLUW: 96638, stgTotalLUW: 489010, diffCount: -392372, prdAttempted: 4.6631, stgAttempted: 3.626, diffLUWPerSec: 1.04 }];
 
+type WallTime = {
+  Application: string
+  PRDWallTime: number
+  STGWallTime: number
+  Difference: number
+}
 
-export const WalltimeTable = () => {
+type Props = {
+  data: WallTime[];
+};
+
+
+export const WalltimeTable = ({ data = [] }: Props) => {
   return (
     <Card className="w-full max-w-full">
         <CardHeader>
@@ -39,27 +50,28 @@ export const WalltimeTable = () => {
                 <th className="px-4 py-2 text-left">Application</th>
                 <th className="px-4 py-2 text-left">Prod</th>
                 <th className="px-4 py-2 text-left">Stage</th>
-                <th className="px-4 py-2 text-left">Δ Time</th>
+                <th className="px-4 py-2 text-left">Time {"(min)"}</th>
                 <th className="px-4 py-2 text-left">Performance</th>
                 </tr>
             </thead>
             <tbody>
-                {batchPerformanceData.map((item, idx) => {
-                const isImproved = item.diffMinutes < 0
+                {data.map((item, idx) => {
+                //const isImproved = item.Difference < 0
+                const isImproved = item.STGWallTime < item.PRDWallTime
                 return (
                     <tr key={idx} className="border-t border-gray-100 text-sm">
-                    <td className="px-4 py-2 whitespace-nowrap">{item.application}</td>
-                    <td className="px-4 py-2 whitespace-nowrap">{formatTime(item.prdWalltime)}</td>
-                    <td className="px-4 py-2 whitespace-nowrap">{formatTime(item.stgWalltime)}</td>
+                    <td className="px-4 py-2 whitespace-nowrap">{item.Application}</td>
+                    <td className="px-4 py-2 whitespace-nowrap">{item.PRDWallTime}</td>
+                    <td className="px-4 py-2 whitespace-nowrap">{item.STGWallTime}</td>
                     <td className="px-4 py-2 whitespace-nowrap">
                         <Badge className={isImproved ? "bg-green-500 text-white" : "bg-red-500 text-white"}>
                         {isImproved ? <ArrowDown className="h-3 w-3 mr-1 inline" /> : <ArrowUp className="h-3 w-3 mr-1 inline" />}
-                        {Math.abs(Math.round(item.diffMinutes))} min
+                        {Math.abs(Math.round(item.Difference))}
                         </Badge>
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
-                        <span className={isImproved ? "text-green-600" : "text-red-600"}>
-                        {isImproved ? "Faster in Prod" : "Slower in Prod"}
+                        <span className={isImproved ? "text-green-600" :  "text-red-600"}>
+                        {isImproved ? "Faster in STG" : "Slower in STG"}
                         </span>
                     </td>
                     </tr>
