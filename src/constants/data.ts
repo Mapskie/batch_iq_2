@@ -38,6 +38,11 @@ export const navItems: NavItem[] = [
         title: 'Analysis',
         url: '/dashboard/report/analysis',
         icon: 'login'
+      },
+      {
+        title: 'Sync',
+        url: '/dashboard/sync',
+        icon: 'login'
       }
     ]
   },
