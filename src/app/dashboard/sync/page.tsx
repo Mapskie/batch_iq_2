@@ -1,13 +1,16 @@
-import fs from 'fs'
-import path from 'path'
-import { Button } from '@/components/ui/button'
-import { redirect } from 'next/navigation'
+import fs from 'fs';
+import path from 'path';
+import { Button } from '@/components/ui/button';
+import { redirect } from 'next/navigation';
 
 // ✅ Server-side sync logic
-async function syncFiles(startDate: string, endDate: string): Promise<{ success: boolean}> {
+async function syncFiles(
+  startDate: string,
+  endDate: string
+): Promise<{ success: boolean }> {
   try {
-    const sourceDir = 'C:/Users/sean.michael.beredo/Accenture/WEC - 2025 RES Hackathon - ReportsGenerated';
-    const destDir = 'C:/Users/sean.michael.beredo/Downloads/sync-files';
+    const sourceDir = '';
+    const destDir = '';
 
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -35,15 +38,15 @@ async function syncFiles(startDate: string, endDate: string): Promise<{ success:
 
           fs.copyFileSync(filePath, destPath);
         }
-      } catch (err:any) {
+      } catch (err: any) {
         console.warn(`Skipping file "${file}" due to error:`, err.message);
         continue;
       }
     }
-    return { success: true }
+    return { success: true };
   } catch (error) {
-    console.log(error)
-    return { success: false }
+    console.log(error);
+    return { success: false };
   }
 }
 
@@ -51,28 +54,28 @@ async function syncFiles(startDate: string, endDate: string): Promise<{ success:
 export default function SyncFilesPage() {
   // Server Action for form submission
   async function onSubmit(formData: FormData) {
-    'use server'
-    const startDate = formData.get('startDate')?.toString()
-    const endDate = formData.get('endDate')?.toString()
+    'use server';
+    const startDate = formData.get('startDate')?.toString();
+    const endDate = formData.get('endDate')?.toString();
 
-    if (!startDate || !endDate) return
+    if (!startDate || !endDate) return;
 
-    const result = await syncFiles(startDate, endDate)
+    const result = await syncFiles(startDate, endDate);
     if (result) {
-      redirect('/dashboard/sync-success')
+      redirect('/dashboard/sync-success');
     } else {
-      redirect('/dashboard/sync-failed')
+      redirect('/dashboard/sync-failed');
     }
   }
 
   return (
-    <form action={onSubmit} className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+    <form action={onSubmit} className='grid grid-cols-1 gap-4 md:grid-cols-3'>
       <div className='flex flex-col space-y-2'>
         <label className='text-sm font-medium'>Start Date</label>
         <input
           type='date'
           name='startDate'
-          className='border rounded px-3 py-2 text-sm'
+          className='rounded border px-3 py-2 text-sm'
           required
         />
       </div>
@@ -81,7 +84,7 @@ export default function SyncFilesPage() {
         <input
           type='date'
           name='endDate'
-          className='border rounded px-3 py-2 text-sm'
+          className='rounded border px-3 py-2 text-sm'
           required
         />
       </div>
@@ -89,5 +92,5 @@ export default function SyncFilesPage() {
         <Button type='submit'>Sync Files</Button>
       </div>
     </form>
-  )
+  );
 }
